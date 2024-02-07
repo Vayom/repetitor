@@ -1,0 +1,36 @@
+{% extends 'teaching/base.html' %}
+
+{% block tittle %}
+    Home
+{% endblock %}
+
+{% block body %}
+    {% if not user.is_authenticated %}
+        <div>
+            <a href="{% url "auth_sys:register" %}">Register</a>
+            <a href="{% url "auth_sys:login" %}">Login</a>
+        </div>
+
+    {% else %}
+        <div>
+            <p>Hello, <a href="{% url 'auth_sys:about_me' %}">{{ user.username }}</a></p>
+        </div>
+        {% if not teacher %}
+            <p><a href="{% url "teaching:create_teacher" %}">Become a teacher</a></p>
+        {% else %}
+            <p><a href="{% url "teaching:teacher_confirm_delete" %}">Stop being a teacher</a></p>
+            <a href="{% url 'teaching:view_requests' %}">View requests</a>
+        {% endif %}
+        {% if not student %}
+            <p><a href="{% url "teaching:create_student" %}">Become a student</a></p>
+        {% else %}
+            <p><a href="{% url "teaching:student_confirm_delete" %}"><p>Stop being a student</p></a></p>
+            <p><a href="{% url 'teaching:teacher_list' %}">Teacher List</a></p>
+        {% endif %}
+
+        <div>
+            <a href="{% url "auth_sys:logout" %}">Logout</a>
+        </div>
+
+    {% endif %}
+{% endblock %}

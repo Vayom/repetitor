@@ -1,0 +1,15 @@
+{% extends 'teaching/base.html' %}
+
+{% block tittle %}
+    Requests
+{% endblock %}
+
+{% block body %}
+    {% for student in teacher.students_request.all %}
+        <p>{{ student.user.username }}</p>
+        <a href="{% url 'teaching:accept_request' student.id %}">Accept</a>
+    {% endfor %}
+    <div>
+        <a href="{% url 'home' %}">Home</a>
+    </div>
+{% endblock %}

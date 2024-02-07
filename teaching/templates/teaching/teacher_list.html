@@ -1,0 +1,35 @@
+{% extends 'teaching/base.html' %}
+
+{% block tittle %}
+    Teacher list
+{% endblock %}
+
+{% block body %}
+    <div>
+        {% if student %}
+            {% for teacher in teachers %}
+                <div>
+                <p>Teacher username: {{ teacher.user.username }}</p>
+                {% if not student in teacher.students_request.all %}
+                    {% if student.user != teacher.user %}
+                    	<form method="post" action="{% url 'teaching:send_request' teacher.id%}">
+                        {% csrf_token %}
+                        <button type="submit">Send request</button>
+                    </form>
+                    {% endif %}
+
+                {% endif %}
+                </div>
+            {% endfor %}
+        {% else %}
+            {% for teacher in teachers %}
+                <p>Teacher username: {{ teacher.user.username }}</p>
+            {% endfor %}
+        {% endif %}
+
+    </div>
+    <div>
+        <a href="{% url 'home' %}">Home</a>
+    </div>
+
+{% endblock %}

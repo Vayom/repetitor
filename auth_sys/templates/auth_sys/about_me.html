@@ -1,0 +1,31 @@
+{% extends 'auth_sys/base.html' %}
+
+{% block tittle %}
+    About me
+{% endblock %}
+
+{% block body %}
+    <h1>User info</h1>
+    {% if user.is_authenticated %}
+        <h2>Details</h2>
+        <p>Username: {{ user.username }}</p>
+        <p>First name: {% firstof user.first_name 'empty' %}</p>
+        <p>Second name: {% firstof user.second_name 'empty' %}</p>
+        {% if teacher %}
+            <p>Teacher: True</p>
+            <p>Number of students: {{ students|length }}</p>
+        {% else %}
+            <p>Teacher: False</p>
+        {% endif %}
+        {% if student %}
+            <p>Student: True</p>
+        {% else %}
+            <p>Student: False</p>
+        {% endif %}
+    {% else %}
+        <h2>Anonymous user</h2>
+    {% endif %}
+    <a href="{% url 'auth_sys:logout' %}">Logout</a>
+    <a href="{% url 'home' %}">Home</a>
+
+{% endblock %}

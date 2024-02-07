@@ -1,0 +1,14 @@
+{% extends 'auth_sys/base.html' %}
+
+
+{% block tittle %}
+	Register
+{% endblock %}
+
+{% block body %}
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Register</button>
+    </form>
+{% endblock %}

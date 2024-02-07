@@ -1,0 +1,12 @@
+{% extends 'teaching/base.html' %}
+
+{% block tittle %}
+    Confirm
+{% endblock %}
+
+{% block body %}
+    <p>Are you sure? Your students will be cleaned</p>
+    <a href="{% url 'home' %}">Home</a>
+
+    <a href="{% url 'teaching:delete_teacher' %}"><button type="button">Confirm</button></a>
+{% endblock %}

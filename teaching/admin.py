@@ -5,9 +5,13 @@ from teaching.models import Homework, Teacher, UserProfile, Student
 
 @admin.register(Homework)
 class HomeworkAdmin(admin.ModelAdmin):
-    fields = ['title', 'description', 'teacher', 'students']
+    fields = ['tittle', 'description', 'teacher', 'student']
 
 
-admin.site.register(Teacher)
+@admin.register(Student)
+class StudentAdmin(admin.ModelAdmin):
+    fields = ['id', 'user']
+
+
 admin.site.register(UserProfile)
-admin.site.register(Student)
+admin.site.register(Teacher)

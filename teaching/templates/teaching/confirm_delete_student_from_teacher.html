@@ -1,0 +1,16 @@
+{% extends 'teaching/base.html' %}
+
+{% block tittle %}
+    Confirm
+{% endblock %}
+
+{% block body %}
+    {% if student in teacher.students.all %}
+        <p>Are you sure? Your teachers will be cleaned</p>
+        <a href="{% url 'teaching:my_students' %}">Back to students list</a>
+        <a href="{% url 'teaching:delete_student' %}"><button type="button">Confirm</button></a>
+    {% else %}
+        <h1>It's not your student</h1>
+        <p><a href="{% url 'teaching:my_students' %}">Back to students list</a></p>
+    {% endif %}
+{% endblock %}

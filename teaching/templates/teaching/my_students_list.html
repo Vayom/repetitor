@@ -1,0 +1,16 @@
+{% extends 'teaching/base.html' %}
+
+{% block tittle %}
+    My Students
+{% endblock %}
+
+{% block body %}
+    {% for student in students %}
+    	<p>{{ student.user.username }}</p>
+        <form action="{% url 'teaching:confirm_delete_student_from_teacher' student_id=student.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit">Delete student</button>
+        </form>
+    {% endfor %}
+    <p><a href="{% url 'home' %}">Home</a></p>
+{% endblock %}

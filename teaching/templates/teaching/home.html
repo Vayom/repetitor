@@ -19,7 +19,8 @@
             <p><a href="{% url "teaching:create_teacher" %}">Become a teacher</a></p>
         {% else %}
             <p><a href="{% url "teaching:teacher_confirm_delete" %}">Stop being a teacher</a></p>
-            <a href="{% url 'teaching:view_requests' %}">View requests</a>
+            <p><a href="{% url 'teaching:view_requests' %}">View requests</a></p>
+            <p><a href="{% url 'teaching:my_students' %}">My Students</a></p>
         {% endif %}
         {% if not student %}
             <p><a href="{% url "teaching:create_student" %}">Become a student</a></p>

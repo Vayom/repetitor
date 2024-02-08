@@ -3,7 +3,8 @@ from django.shortcuts import render, redirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import TemplateView, DeleteView, ListView
 
-from teaching.models import Teacher, Student
+from teaching.forms import AddHomeworkForm
+from teaching.models import Teacher, Student, Homework
 
 
 def home(request: HttpRequest):
@@ -84,3 +85,56 @@ def accept_request(request: HttpRequest, student_id: int):
     return redirect(reverse('teaching:view_requests'))
 
 
+def my_students_list(request: HttpRequest):
+    teacher = Teacher.objects.get(user=request.user)
+    students = teacher.students.all()
+    context = {
+        'students': students,
+    }
+    return render(request, 'teaching/my_students_list.html', context)
+
+
+def delete_student_from_teacher(request: HttpRequest, student_id: int):
+    teacher = Teacher.objects.get(user=request.user)
+    student = Student.objects.get(pk=student_id)
+    teacher.students.remove(student)
+    teacher.save()
+    return redirect(reverse('teaching:my_students'))
+
+
+def give_homework(request: HttpRequest, student_id: int):
+    teacher = Teacher.objects.get(user=request.user)
+    student = Student.objects.get(pk=student_id)
+    form = AddHomeworkForm()
+    context = {
+        'teacher': teacher,
+        'student': student,
+        'form': form,
+    }
+    if request.method == 'POST':
+        form = AddHomeworkForm(request.POST)
+        if form.is_valid():
+            tittle = form.cleaned_data['tittle']
+            description = form.cleaned_data['description']
+            difficulty = form.cleaned_data['difficulty']
+            homework = Homework.objects.create(
+                tittle=tittle,
+                description=description,
+                difficulty=difficulty,
+                student=student,
+                teacher=teacher)
+            homework.save()
+            return redirect(reverse('home'))
+    return render(request, 'teaching/give_homework.html', context)
+
+
+def confirm_delete_student_from_teacher(request: HttpRequest, student_id: int):
+    teacher = Teacher.objects.get(user=request.user)
+    student = Student.objects.get(id=student_id)
+    context = {
+        'teacher': teacher,
+        'student': student,
+        'student_id': student_id
+    }
+    template_name = 'teaching/confirm_delete_student_from_teacher.html'
+    return render(request, template_name, context)

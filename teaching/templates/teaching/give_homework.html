@@ -1,0 +1,13 @@
+{% extends 'teaching/base.html' %}
+
+{% block tittle %}
+    Give homework
+{% endblock %}
+
+{% block body %}
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Give</button>
+    </form>
+{% endblock %}

@@ -3,14 +3,14 @@ from django.db import models
 
 
 class Homework(models.Model):
-    title = models.CharField(max_length=100)
+    tittle = models.CharField(max_length=100)
     description = models.TextField(null=True, blank=True)
     difficulty = models.IntegerField(null=False, default=0)
     teacher = models.ForeignKey('Teacher', null=True, on_delete=models.CASCADE)
-    students = models.ManyToManyField('Student', blank=True)
+    student = models.ForeignKey('Student', blank=True, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.title
+        return self.tittle
 
 
 class UserProfile(models.Model):
@@ -39,8 +39,3 @@ class Student(models.Model):
     def __str__(self):
         return f'{self.user.username}'
 
-
-class RequestTeaching(models.Model):
-    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    accepted = models.BooleanField(default=False)

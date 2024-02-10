@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
 
@@ -8,6 +9,9 @@ class Homework(models.Model):
     difficulty = models.IntegerField(null=False, default=0)
     teacher = models.ForeignKey('Teacher', null=True, on_delete=models.CASCADE)
     student = models.ForeignKey('Student', blank=True, on_delete=models.CASCADE)
+    completed = models.BooleanField(default=False)
+    verified = models.BooleanField(default=False)
+    score = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(5)])
 
     def __str__(self):
         return self.tittle

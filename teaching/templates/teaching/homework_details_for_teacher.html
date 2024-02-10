@@ -1,0 +1,29 @@
+{% extends 'teaching/base.html' %}
+
+{% block tittle %}
+    Homework {{ homework.tittle }} details
+{% endblock %}
+
+{% block body %}
+    {% if is_current_teacher %}
+        <p>Description: {{ homework.description }}</p>
+        <p>Difficulty: {{ homework.difficulty }}</p>
+        <p>Completed: {{ homework.completed }}</p>
+        <p>Verified: {{ homework.verified }}</p>
+        {% if not homework.verified %}
+        	<form method="post">
+                {% csrf_token %}
+                <label for="numberInput">Enter a number from 2 to 5:</label>
+                <input type="number" id="scores" name="scores" min="2" max="5">
+                <button type="submit">Send to verification</button>
+            </form>
+        {% else %}
+            <p>Score: {{ homework.score }}</p>
+        {% endif %} 
+        
+    {% else %}
+        <h1>This is not your student's homework.</h1>
+    {% endif %}
+
+    <p><a href="{% url 'home' %}">Home</a></p>
+{% endblock %}

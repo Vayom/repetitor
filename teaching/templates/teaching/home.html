@@ -20,6 +20,7 @@
         {% else %}
             <p><a href="{% url "teaching:teacher_confirm_delete" %}">Stop being a teacher</a></p>
             <p><a href="{% url 'teaching:view_requests' %}">View requests</a></p>
+            <p><a href="{% url 'teaching:students_homework_view' %}">Students homework</a></p>
             <p><a href="{% url 'teaching:my_students' %}">My Students</a></p>
         {% endif %}
         {% if not student %}
@@ -27,6 +28,7 @@
         {% else %}
             <p><a href="{% url "teaching:student_confirm_delete" %}"><p>Stop being a student</p></a></p>
             <p><a href="{% url 'teaching:teacher_list' %}">Teacher List</a></p>
+            <p><a href="{% url 'teaching:my_homework_view' %}">Homework List</a></p>
         {% endif %}
 
         <div>

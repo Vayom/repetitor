@@ -1,0 +1,13 @@
+{% extends 'teaching/base.html' %}
+
+{% block tittle %}
+    My homework
+{% endblock %}
+
+{% block body %}
+    <p><a href="{% url 'teaching:my_completed_homework_view' %}">Completed homework</a></p>
+    {% for homework in homeworks %}
+        <p><a href="{% url 'teaching:homework_detail_view' homework_id=homework.pk %}">Tittle: {{ homework.tittle }}</a></p>
+    {% endfor %}
+    <p><a href="{% url 'home' %}">Home</a></p>
+{% endblock %}

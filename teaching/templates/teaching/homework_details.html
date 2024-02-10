@@ -1,0 +1,28 @@
+{% extends 'teaching/base.html' %}
+
+{% block tittle %}
+    Homework {{ homework.tittle }} detail
+{% endblock %}
+
+{% block body %}
+    {% if is_current_student %}
+        <p>Description: {{ homework.description }}</p>
+        <p>Difficulty: {{ homework.difficulty }}</p>
+        <p>Completed: {{ homework.completed }}</p>
+        
+        {% if homework.completed %}
+            <p>Verified: {{ homework.verified }}</p>
+            {% if homework.verified %}
+            	<p>Score: {{ homework.score }}</p>
+            {% endif %} 
+        {% endif %}
+        <form action="{% url 'teaching:homework_send_to_verification' homework_id=homework.id %}">
+                {% csrf_token %}
+                <button type="submit">Send to verification</button>
+            </form>
+    {% else %}
+        <h1>It's not your homework</h1>
+    {% endif %} 
+    
+    <p><a href="{% url 'home' %}">Home</a></p>
+{% endblock %}

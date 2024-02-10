@@ -6,7 +6,8 @@
 
 {% block body %}
     {% for student in students %}
-    	<p>{{ student.user.username }}</p>
+        <p>{{ student.user.username }}</p>
+        <p><a href="{% url 'teaching:give_homework' student_id=student.id %}">Give homework</a></p>
         <form action="{% url 'teaching:confirm_delete_student_from_teacher' student_id=student.id %}" method="post">
             {% csrf_token %}
             <button type="submit">Delete student</button>

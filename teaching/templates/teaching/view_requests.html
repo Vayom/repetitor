@@ -5,11 +5,20 @@
 {% endblock %}
 
 {% block body %}
-    {% for student in teacher.students_request.all %}
+    {% if teacher %}
+    	{% for student in teacher.students_request.all %}
         <p>{{ student.user.username }}</p>
         <a href="{% url 'teaching:accept_request' student.id %}">Accept</a>
+        <a href="{% url 'teaching:reject_request' student.id %}">Reject</a>
     {% endfor %}
     <div>
         <a href="{% url 'home' %}">Home</a>
     </div>
+    {% else %}
+        <h1>You are not a teacher</h1>
+        <div>
+            <a href="{% url 'home' %}">Home</a>
+        </div>
+    {% endif %} 
+    
 {% endblock %}

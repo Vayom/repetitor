@@ -5,12 +5,12 @@ from teaching.models import Homework, Teacher, UserProfile, Student
 
 @admin.register(Homework)
 class HomeworkAdmin(admin.ModelAdmin):
-    fields = ['tittle', 'description', 'teacher', 'student']
+    fields = ['tittle', 'description', 'teacher', 'student', 'completed', 'verified', 'score']
 
 
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
-    fields = ['id', 'user']
+    fields = ['user']
 
 
 admin.site.register(UserProfile)

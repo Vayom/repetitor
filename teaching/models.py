@@ -11,11 +11,11 @@ class Homework(models.Model):
     student = models.ForeignKey('Student', blank=True, on_delete=models.CASCADE)
     completed = models.BooleanField(default=False)
     verified = models.BooleanField(default=False)
+    file = models.FileField(null=True, upload_to='homework_files')
     score = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(5)])
 
     def __str__(self):
         return self.tittle
-
 
 class UserProfile(models.Model):
     """
@@ -42,4 +42,3 @@ class Student(models.Model):
 
     def __str__(self):
         return f'{self.user.username}'
-

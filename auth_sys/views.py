@@ -1,4 +1,5 @@
 from django.contrib.auth import logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpRequest
 from django.shortcuts import render, redirect
@@ -13,6 +14,7 @@ def logout_view(request):
     return redirect(reverse('home'))
 
 
+@login_required
 def about_me(request: HttpRequest):
     students = None
     try:
@@ -42,4 +44,3 @@ class RegisterView(CreateView):
         response = super().form_valid(form)
         UserProfile.objects.create(user=self.object)
         return response
-

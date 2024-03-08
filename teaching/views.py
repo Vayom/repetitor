@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse, HttpRequest, HttpResponseBadRequest
 from django.shortcuts import render, redirect
@@ -39,20 +40,22 @@ def delete_teacher(request: HttpRequest):
     return redirect(reverse('home'))
 
 
-class TeacherConfirmDeleteView(TemplateView):
+class TeacherConfirmDeleteView(TemplateView, LoginRequiredMixin):
     template_name = 'teaching/teacher_confirm_delete.html'
 
 
+@login_required
 @student_required
 def delete_student(request: HttpRequest):
     student = Student.objects.filter(user=request.user).delete()
     return redirect(reverse('home'))
 
 
-class StudentConfirmDeleteView(TemplateView):
+class StudentConfirmDeleteView(TemplateView, LoginRequiredMixin):
     template_name = 'teaching/student_confirm_delete.html'
 
 
+@login_required
 def teachers_list(request: HttpRequest):
     # TODO optimize ORM in this view
     teachers = Teacher.objects.prefetch_related('students_request').all()
@@ -68,6 +71,7 @@ def teachers_list(request: HttpRequest):
     return render(request, template_name, context)
 
 
+@login_required
 @student_required
 def send_request(request: HttpRequest, teacher_id: int):
     user = request.user
@@ -78,6 +82,7 @@ def send_request(request: HttpRequest, teacher_id: int):
     return redirect(reverse('teaching:teacher_list'))
 
 
+@login_required
 @teacher_required
 def view_requests(request: HttpRequest):
     # TODO optimize ORM in this view
@@ -88,6 +93,7 @@ def view_requests(request: HttpRequest):
     return render(request, 'teaching/view_requests.html', {'teacher': teacher})
 
 
+@login_required
 @teacher_required
 def accept_request(request: HttpRequest, student_id: int):
     teacher = Teacher.objects.get(user=request.user)
@@ -98,6 +104,8 @@ def accept_request(request: HttpRequest, student_id: int):
     return redirect(reverse('teaching:view_requests'))
 
 
+@login_required
+@teacher_required
 def reject_request(request: HttpRequest, student_id: int):
     teacher = Teacher.objects.get(user=request.user)
     student = Student.objects.get(pk=student_id)
@@ -116,6 +124,7 @@ def my_students_list(request: HttpRequest):
     return render(request, 'teaching/my_students_list.html', context)
 
 
+@login_required
 @teacher_required
 def delete_student_from_teacher(request: HttpRequest, student_id: int):
     teacher = Teacher.objects.get(user=request.user)
@@ -127,6 +136,7 @@ def delete_student_from_teacher(request: HttpRequest, student_id: int):
     return redirect(reverse('teaching:my_students'))
 
 
+@login_required
 @teacher_required
 def confirm_delete_student_from_teacher(request: HttpRequest, student_id: int):
     teacher = Teacher.objects.get(user=request.user)
@@ -140,33 +150,39 @@ def confirm_delete_student_from_teacher(request: HttpRequest, student_id: int):
     return render(request, template_name, context)
 
 
+@login_required
 @teacher_required
 def give_homework(request: HttpRequest, student_id: int):
     teacher = Teacher.objects.get(user=request.user)
     student = Student.objects.get(pk=student_id)
-    form = AddHomeworkForm()
-    context = {
-        'teacher': teacher,
-        'student': student,
-        'form': form,
-    }
+
     if request.method == 'POST':
-        form = AddHomeworkForm(request.POST)
+        form = AddHomeworkForm(request.POST, request.FILES)
         if form.is_valid():
             tittle = form.cleaned_data['tittle']
             description = form.cleaned_data['description']
             difficulty = form.cleaned_data['difficulty']
+            file = form.cleaned_data['file']
             homework = Homework.objects.create(
                 tittle=tittle,
                 description=description,
                 difficulty=difficulty,
                 student=student,
-                teacher=teacher)
+                teacher=teacher,
+                file=file)
             homework.save()
             return redirect(reverse('home'))
+    else:
+        form = AddHomeworkForm()
+    context = {
+        'teacher': teacher,
+        'student': student,
+        'form': form,
+    }
     return render(request, 'teaching/give_homework.html', context)
 
 
+@login_required
 @student_required
 def my_homework_view(request: HttpRequest):
     template_name = 'teaching/my_homework_view.html'
@@ -179,21 +195,28 @@ def my_homework_view(request: HttpRequest):
     return render(request=request, template_name=template_name, context=context)
 
 
+@login_required
 @student_required
 def homework_details_view(request: HttpRequest, homework_id: int):
+    homework_tittle = None
     is_current_student = True
     student = Student.objects.get(user=request.user)
     homework = Homework.objects.get(id=homework_id)
     if student != homework.student:
         is_current_student = False
     template_name = 'teaching/homework_details.html'
+    if homework.file:
+        homework_tittle = homework.file.name.split('/')[1]
+
     context = {
         'homework': homework,
         'is_current_student': is_current_student,
+        'homework_tittle': homework_tittle,
     }
     return render(request, template_name, context)
 
 
+@login_required
 @student_required
 def homework_send_to_verification(request: HttpRequest, homework_id: int):
     homework = Homework.objects.get(id=homework_id)
@@ -204,6 +227,7 @@ def homework_send_to_verification(request: HttpRequest, homework_id: int):
     return redirect(reverse('teaching:my_homework_view'))
 
 
+@login_required
 @student_required
 def my_completed_homework_view(request: HttpRequest):
     student = Student.objects.get(user=request.user)
@@ -212,6 +236,7 @@ def my_completed_homework_view(request: HttpRequest):
     return render(request, template_name, {'homeworks': homeworks})
 
 
+@login_required
 @student_required
 def students_homework_view(request: HttpRequest):
     template_name = 'teaching/students_homework_view.html'
@@ -223,6 +248,7 @@ def students_homework_view(request: HttpRequest):
     return render(request, template_name, context)
 
 
+@login_required
 @teacher_required
 def homework_details_for_teacher(request: HttpRequest, homework_id: int):
     if request.method == 'POST':

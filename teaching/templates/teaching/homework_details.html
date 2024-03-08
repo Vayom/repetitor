@@ -9,7 +9,9 @@
         <p>Description: {{ homework.description }}</p>
         <p>Difficulty: {{ homework.difficulty }}</p>
         <p>Completed: {{ homework.completed }}</p>
-        
+        {% if homework.file %}
+            <p>File: <a href="{{ homework.file.url }}" target="_blank">{{ homework_tittle }}</a></p>
+        {% endif %}
         {% if homework.completed %}
             <p>Verified: {{ homework.verified }}</p>
             {% if homework.verified %}

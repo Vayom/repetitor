@@ -1,39 +1,57 @@
 {% extends 'teaching/base.html' %}
+{% load static %}
 
 {% block tittle %}
     Home
 {% endblock %}
-
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static "css/home.css" %}">
+{% endblock %}
 {% block body %}
-    {% if not user.is_authenticated %}
-        <div>
-            <a href="{% url "auth_sys:register" %}">Register</a>
-            <a href="{% url "auth_sys:login" %}">Login</a>
-        </div>
 
-    {% else %}
-        <div>
-            <p>Hello, <a href="{% url 'auth_sys:about_me' %}">{{ user.username }}</a></p>
-        </div>
-        {% if not teacher %}
-            <p><a href="{% url "teaching:create_teacher" %}">Become a teacher</a></p>
+    <header>
+            {% if not user.is_authenticated %}
+                <div class="user">
+                    <p style="padding-right: 100px"><a href="{% url "auth_sys:register" %}">Register</a></p>
+                    <p><a href="{% url "auth_sys:login" %}">Login</a></p>
+                </div>
         {% else %}
-            <p><a href="{% url "teaching:teacher_confirm_delete" %}">Stop being a teacher</a></p>
-            <p><a href="{% url 'teaching:view_requests' %}">View requests</a></p>
-            <p><a href="{% url 'teaching:students_homework_view' %}">Students homework</a></p>
-            <p><a href="{% url 'teaching:my_students' %}">My Students</a></p>
-        {% endif %}
-        {% if not student %}
-            <p><a href="{% url "teaching:create_student" %}">Become a student</a></p>
-        {% else %}
-            <p><a href="{% url "teaching:student_confirm_delete" %}"><p>Stop being a student</p></a></p>
-            <p><a href="{% url 'teaching:teacher_list' %}">Teacher List</a></p>
-            <p><a href="{% url 'teaching:my_homework_view' %}">Homework List</a></p>
-        {% endif %}
+            <div class="user">
+                <p>Hello, <a href="{% url 'auth_sys:about_me' %}">{{ user.username }}</a></p>
+            </div>
+            <div class="teacher">
+                {% if not teacher %}
+                    <div class="become-teacher">
+                        <p><a href="{% url "teaching:create_teacher" %}">Become a teacher</a></p>
+                    </div>
+                {% else %}
+                    <div class="teacher-actions">
+                        <p><a href="{% url "teaching:teacher_confirm_delete" %}">Stop being a teacher</a></p>
+                        <p><a href="{% url 'teaching:view_requests' %}">View requests</a></p>
+                        <p><a href="{% url 'teaching:students_homework_view' %}">Students homework</a></p>
+                        <p><a href="{% url 'teaching:my_students' %}">My Students</a></p>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="student">
+                {% if not student %}
+                    <div class="become-student">
+                        <p><a href="{% url "teaching:create_student" %}">Become a student</a></p>
+                    </div>
+                {% else %}
+                    <div class="student-actions">
+                        <p><a href="{% url "teaching:student_confirm_delete" %}"><p>Stop being a student</p></a></p>
+                        <p><a href="{% url 'teaching:teacher_list' %}">Teacher List</a></p>
+                        <p><a href="{% url 'teaching:my_homework_view' %}">Homework List</a></p>
+                    </div>
+                {% endif %}
+            </div>
 
-        <div>
-            <a href="{% url "auth_sys:logout" %}">Logout</a>
-        </div>
+            <div>
+                <p><a href="{% url "auth_sys:logout" %}">Logout</a></p>
+            </div>
 
-    {% endif %}
+        {% endif %}
+    </header>
+
 {% endblock %}
